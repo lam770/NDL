@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz cá nhân của Lâm Nguyễn</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #ffc0cb; /* nền hồng cute */
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #fff;
+      font-size: 28px;
+      text-shadow: 2px 2px #ff69b4;
+    }
+    .question {
+      margin-bottom: 20px;
+      padding: 15px;
+      background: #fff0f5;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      font-size: 14px;
+    }
+    .options button {
+      display: block;
+      margin: 5px 0;
+      padding: 8px;
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #ffb6c1;
+      color: #fff;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    .options button:hover {
+      background: #ff69b4;
+    }
+    .options button.correct {
+      background: #4CAF50;
+    }
+    .options button.wrong {
+      background: #f44336;
+    }
+    .feedback {
+      margin-top: 5px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    #score {
+      font-size: 18px;
+      text-align: center;
+      margin-top: 20px;
+      color: #fff;
+      text-shadow: 1px 1px #ff69b4;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Quiz cá nhân của Lâm Nguyễn</h1>
+<div id="quiz"></div>
+<div id="score"></div>
+
+<script>
+const questions = [
+  {q:"Bạn thích mặt trăng hay mặt trời?", options:["Mặt trời","Mặt trăng","Sao","Mây"], answer:1},
+  {q:"Bạn thích ở đâu khi rảnh?", options:["Nơi đông người","Một mình","Công viên","Quán cà phê"], answer:1},
+  {q:"Bạn thích loại động vật nào nhất?", options:["Chó","Rắn","Mèo","Chim"], answer:0},
+  {q:"Bạn thích chơi loại game nào?", options:["Minecraft","Liên Minh Huyền Thoại","Free Fire","Valorant"], answer:0},
+  {q:"Bạn ghét loại động vật nào?", options:["Rắn","Chó","Mèo","Thỏ"], answer:0},
+  {q:"Bạn thích xem loại gì?", options:["Anime","Phim Hàn","Hoạt hình","Phim tài liệu"], answer:0},
+  {q:"Thời gian bạn hay thức khuya nhất?", options:["Trước 10h","10h–12h","Sau 12h","Không thức khuya"], answer:2},
+  {q:"Thời tiết nào bạn thích nhất?", options:["Nóng","Lạnh","Mưa","Gió nhẹ"], answer:1},
+  {q:"Bạn thích hoạt động nào ngoài trời?", options:["Đi dạo một mình","Party cùng bạn bè","Chơi thể thao","Picnic"], answer:0},
+  {q:"Bạn thích ánh sáng nào vào ban đêm?", options:["Mặt trời","Mặt trăng","Đèn đường","Sao"], answer:1},
+  {q:"Bạn thích đồ ăn nào nhất?", options:["Pizza","Kem","Rau","Thịt"], answer:3},
+  {q:"Bạn thích uống gì khi thức khuya?", options:["Nước lọc","Nước ngọt","Sữa","Trà"], answer:2},
+  {q:"Bạn thích loại nhạc nào?", options:["Pop","Rock","Nhạc anime","EDM"], answer:2},
+  {q:"Bạn thích chơi trò chơi nào trên máy tính?", options:["Minecraft","Liên Minh","Free Fire","Valorant"], answer:0},
+  {q:"Bạn thích đi đâu vào cuối tuần?", options:["Ở nhà","Công viên","Quán cà phê","Siêu thị"], answer:0},
+  {q:"Bạn thích nuôi thú cưng nào?", options:["Chó","Mèo","Thỏ","Chim"], answer:0},
+  {q:"Bạn thích ngắm gì buổi tối?", options:["Trăng","Sao","Mặt trời","Mây"], answer:0},
+  {q:"Bạn thích hoạt động nào khi rảnh?", options:["Chơi game","Xem anime","Vẽ","Đi bộ"], answer:0},
+  {q:"Bạn thích thời tiết buổi sáng nào?", options:["Lạnh","Nóng","Ẩm","Gió"], answer:0},
+  {q:"Bạn thích đi dạo lúc nào?", options:["Buổi sáng","Buổi trưa","Buổi tối","Không đi"], answer:2},
+];
+
+let score = 0;
+
+function loadQuiz() {
+  const quizDiv = document.getElementById("quiz");
+  quizDiv.innerHTML = "";
+  
+  questions.forEach((q, index) => {
+    const qDiv = document.createElement("div");
+    qDiv.className = "question";
+    
+    const qText = document.createElement("h3");
+    qText.textContent = `${index+1}. ${q.q}`;
+    qDiv.appendChild(qText);
+    
+    const optsDiv = document.createElement("div");
+    optsDiv.className = "options";
+    
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.textContent = opt;
+      btn.addEventListener("click", () => checkAnswer(btn, i, q.answer, qDiv));
+      optsDiv.appendChild(btn);
+    });
+    
+    qDiv.appendChild(optsDiv);
+
+    const feedback = document.createElement("div");
+    feedback.className = "feedback";
+    qDiv.appendChild(feedback);
+
+    quizDiv.appendChild(qDiv);
+  });
+}
+
+function checkAnswer(btn, selected, correct, qDiv) {
+  const buttons = btn.parentElement.querySelectorAll("button");
+  buttons.forEach(b => b.disabled = true);
+
+  const feedback = qDiv.querySelector(".feedback");
+
+  if(selected === correct) {
+    btn.classList.add("correct");
+    score++;
+    feedback.textContent = "Đúng!";
+    feedback.style.color = "#4CAF50";
+  } else {
+    btn.classList.add("wrong");
+    buttons[correct].classList.add("correct");
+    feedback.textContent = "Sai!";
+    feedback.style.color = "#f44336";
+  }
+  
+  document.getElementById("score").textContent = `Điểm hiện tại: ${score} / ${questions.length}`;
+}
+
+loadQuiz();
+</script>
+
+</body>
+</html>
